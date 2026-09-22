@@ -83,7 +83,7 @@ export function rank({
     const priceScore = delivered ? Math.max(0, Math.min(1, best / delivered)) : 0;
     const leadScore =
       quote.lead_time_days == null
-        ? 0.5
+        ? 0.1
         : Math.max(0, Math.min(1, 1 - Number(quote.lead_time_days) / Math.max(maxLeadTime, 1)));
     const coaScore = { pass: 1, not_received: 0.4, fail: 0 }[coaVerdict] ?? 0.4;
     const holdsAll = requiredCerts.every((c) => certs.includes(c));

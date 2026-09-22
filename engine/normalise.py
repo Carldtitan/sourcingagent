@@ -143,7 +143,9 @@ def score(
     price_score = max(0.0, min(1.0, best_delivered / delivered)) if delivered else 0.0
 
     if lead_time_days is None:
-        lead_score = 0.5
+        # A supplier who will not say when the goods arrive is a risk to the
+        # launch date, so silence scores below almost any stated lead time.
+        lead_score = 0.1
     else:
         lead_score = max(0.0, min(1.0, 1 - (lead_time_days / max(max_lead_time_days, 1))))
 

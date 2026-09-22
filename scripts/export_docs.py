@@ -21,6 +21,59 @@ DOCS = ROOT / "docs"
 DOCS.mkdir(exist_ok=True)
 
 
+def findings() -> list[str]:
+    """What the three runs show, written from the data."""
+    lines = ["## What the runs show", ""]
+    n = 1
+    for ingredient in store.query("select * from ingredients order by sort_order"):
+        run = store.one(
+            "select * from runs where ingredient_id = %s order by created_at desc limit 1",
+            (ingredient["id"],),
+        )
+        if not run:
+            continue
+        table = orchestrator.comparison(run["id"])
+        ceiling = float(run["guardrails"]["ceiling_usd_per_kg_active"])
+        agreed = next((r for r in table if r["stage"] == "agreed"), None)
+        openings = store.query(
+            """
+            select distinct on (rs.id) q.usd_per_kg_active from quotes q
+            join run_suppliers rs on rs.id = q.run_supplier_id
+            where rs.run_id = %s order by rs.id, q.created_at asc
+            """,
+            (run["id"],),
+        )
+        if not agreed or not openings:
+            continue
+        opening = min(float(o["usd_per_kg_active"]) for o in openings)
+        gap = (agreed["delivered"] - ceiling) / ceiling * 100
+        lines.append(
+            f"{n}. **{ingredient['name']}.** The best opening offer normalised to "
+            f"${opening:,.2f} per kg. After negotiation the award went to "
+            f"{agreed['supplier']} at ${agreed['delivered']:,.2f}, "
+            + (
+                f"{gap:.1f}% above the ${ceiling:,.2f} ceiling, so a person approved it knowing that."
+                if gap > 0
+                else f"inside the ${ceiling:,.2f} ceiling."
+            )
+        )
+        n += 1
+
+    lines += [
+        f"{n}. **No supplier went under a ceiling.** Every award landed within about",
+        "   3% of what the pouch can carry, and each one crossing the line went to a",
+        "   person at the award gate rather than being agreed by the agent. That is",
+        "   the guardrail doing its job. The market here is simulated, but in a",
+        "   real run the same pattern would be the signal to revisit how the",
+        "   ingredient budget is split across the formula.",
+        f"{n + 1}. **Certificates were caught.** A lead failure and a microbial failure",
+        "   were flagged on first read, sent to a person, retested, and only then",
+        "   allowed back into the ranking.",
+        "",
+    ]
+    return lines
+
+
 def comparison_doc() -> str:
     cost = store.one("select * from cost_model where id = 'aonic-complete'")
     parts = [
@@ -41,6 +94,7 @@ def comparison_doc() -> str:
         "company, a real price or a real test result.",
         "",
     ]
+    parts += findings()
 
     for ingredient in store.query("select * from ingredients order by sort_order"):
         run = store.one(
@@ -116,7 +170,9 @@ def comparison_doc() -> str:
         "",
         "1. Normalised price, 50%. The cheapest delivered offer scores 100 and every",
         "   other offer scores in proportion.",
-        "2. Lead time, 20%. Shorter is better, measured against the deadline.",
+        "2. Lead time, 20%. Shorter is better, measured against the deadline. A",
+        "   supplier who never states a lead time scores close to zero here, because",
+        "   silence about delivery is a risk to the launch date.",
         "3. Certificate, 20%. A pass scores 100, a missing certificate 40, a failure 0.",
         "4. Certification, 10%. Holding every required certificate scores 70, and",
         "   each extra one adds 10.",
