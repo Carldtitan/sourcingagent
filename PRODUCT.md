@@ -1,0 +1,67 @@
+# Product
+
+<!-- impeccable:product-schema 1 -->
+
+## Platform
+
+web
+
+## Stack
+
+Next.js (App Router) on Vercel, Supabase Postgres and Storage, Python agents built with LangGraph running as Vercel Python functions. Email sending over Gmail SMTP and receiving over Gmail IMAP. Agent reasoning on Anthropic Claude Sonnet 5. Confirmed by the user; all services on free tiers.
+
+## Users
+
+Primary user is a sourcing buyer at Aonic, a functional nutrition company in San Francisco. Their job is to get each raw ingredient in the Aonic Complete multinutrient priced, vetted and ready to order, working under a launch deadline. They already understand sourcing terminology and do not need it explained. They work in short bursts, checking progress between other tasks, and they are accountable for what the company agrees to buy.
+
+A secondary audience exists: an assessor at Aonic reviewing this build as a job assessment. The interface is designed for the buyer, and the assessor reads it as evidence that the buyer's job is genuinely done.
+
+## Product Purpose
+
+Turn one ingredient brief into three to five validated, directly comparable supplier offers. The product runs supplier discovery, qualification, Certificate of Analysis validation, email outreach and multi-round negotiation, then normalises every offer to one comparable delivered price and ranks them. Success is a buyer reaching a defensible purchase decision in about thirty minutes, where the same work by hand takes two to three days.
+
+## Positioning
+
+Most sourcing tools stop at finding suppliers or at storing quotes. This one negotiates. It conducts real email conversations with suppliers, reads their replies and their lab certificates, counters prices inside limits a human set, and escalates when it hits something it should not decide alone. The comparable price it produces is calculated, correcting for purity, currency and delivery terms, so the cheapest quote and the cheapest true cost can be told apart.
+
+## Operating Context
+
+1. Suppliers are reached by email. No supplier API exists in this industry, so every quote arrives as prose written by a person, often answering only part of what was asked, with a Certificate of Analysis attached as a PDF.
+2. A negotiation runs over hours or days in real life, across several messages, with silences that need chasing.
+3. The buyer is away from the screen for most of a run. They return to approve, to resolve an escalation, or to read the final table.
+4. Each ingredient carries a target specification covering assay, heavy metal limits, microbial limits and required certifications. A delivery that misses any line is rejected.
+5. Money and food safety are both at stake, so a human approves before outreach starts and before anything is agreed.
+
+## Capabilities and Constraints
+
+1. Two human approval gates: the supplier shortlist before any email is sent, and the winning offer before the closing email is sent.
+2. Four escalation triggers: a Certificate of Analysis failing specification, a price above the guardrail ceiling, a supplier question the agent cannot answer, and three negotiation rounds ending without agreement.
+3. Human approvals live in the interface. Telegram and Slack alerting is a stated production design choice and is not built.
+4. Suppliers are twelve simulated companies, each with its own price floor, reply delay and stubbornness, each on its own email address. The counterparties are fake and the email is real. No real supplier is ever contacted, which the assessment brief requires.
+5. Supplier discovery is seeded from our own database. No live web search.
+6. Negotiation is capped at three rounds and bounded by a price ceiling, a maximum order value and a maximum lead time.
+7. Vercel's free plan allows one cron run a day, so mail is fetched on an interval while the interface is open and on demand from a control in the interface.
+8. Terminology the interface uses without explanation: ingredient brief, target specification, assay, minimum order quantity, lead time, country of origin, Certificate of Analysis, Request for Quotation, Incoterms, normalised price.
+
+## Brand Commitments
+
+Aonic's own identity, made binding by the user. Off-white background #fcfbf9, near-black #171614, sand accent #c9b48a and #8a6d3b, Inter Tight and Inter, AONIC set in type with no logo file available. Aonic's site is clean and minimal. The tone across Aonic's materials is plain, direct and unhedged.
+
+## Evidence on Hand
+
+1. The Aonic Complete ingredient list comes from the Supplement Facts panel on aoniclife.com. The internal specification sheet named in the assessment brief was never supplied, so purity limits, contaminant ceilings and certification requirements are written by us against standard industry limits and must be labelled as our assumption wherever they appear.
+2. No supplier data, price data or lab certificates exist. Every supplier, quote and Certificate of Analysis in the system is generated by us and must be visibly marked as simulated.
+3. No Aonic logo file or product photography is available, because the site blocks automated downloads.
+4. Nothing may imply a real supplier relationship, a real price or a real test result.
+
+## Product Principles
+
+1. Show the reasoning, never only the outcome. Every filtered supplier, every counter-offer and every rejected certificate carries the reason on screen.
+2. The email is the product. Raw supplier messages and what the agent extracted from them sit side by side, so the parsing can be checked line by line.
+3. A quoted price is not a price. Nothing is ranked until it is normalised to one delivered cost per kilogram of active ingredient.
+4. Humans hold the two decisions that commit the company: who gets contacted, and what gets agreed.
+5. Simulated data is always labelled as simulated.
+
+## Accessibility & Inclusion
+
+No product-specific requirement was established. Pass state and fail state on certificates and offers must not rely on colour alone.
