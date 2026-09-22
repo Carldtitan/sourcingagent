@@ -10,8 +10,8 @@ const KIND_WORD: Record<string, string> = {
   followup: "Follow-up",
   counter: "Counter-offer",
   revised: "Revised quotation",
-  close: "Close",
-  decline: "Decline",
+  close: "Closing email",
+  decline: "Decline note",
   retest: "Retest request",
   question: "Question",
 };
@@ -99,16 +99,14 @@ export default async function ThreadPage({
                 }}
               >
                 <div className="node-head">
-                  <span className="label">
-                    {outbound ? "We sent" : "They sent"} ·{" "}
-                    {KIND_WORD[message.kind] ?? message.kind}
-                  </span>
+                  <h3 style={{ fontSize: 14 }}>{message.subject}</h3>
                   <span
                     className="num"
                     style={{
                       marginLeft: "auto",
                       fontSize: 10.5,
                       color: "var(--ink-3)",
+                      whiteSpace: "nowrap",
                     }}
                   >
                     {new Date(message.occurred_at).toLocaleString("en-GB")}
@@ -120,11 +118,20 @@ export default async function ThreadPage({
                     fontSize: 11.5,
                     color: "var(--ink-3)",
                     fontFamily: "var(--mono)",
-                    marginBottom: 10,
+                    marginBottom: 12,
                     wordBreak: "break-all",
                   }}
                 >
-                  from {message.from_addr} · to {message.to_addr}
+                  <span
+                    style={{
+                      color: outbound ? "var(--ink)" : "var(--tension)",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {outbound ? "We sent" : "They sent"} a{" "}
+                    {(KIND_WORD[message.kind] ?? message.kind).toLowerCase()}
+                  </span>{" "}
+                  · from {message.from_addr} · to {message.to_addr}
                   {message.message_id ? ` · ${message.message_id}` : ""}
                 </div>
 
@@ -150,10 +157,6 @@ export default async function ThreadPage({
                     {message.agent_note.why}
                   </div>
                 )}
-
-                <h3 style={{ marginBottom: 8, fontSize: 14 }}>
-                  {message.subject}
-                </h3>
 
                 <pre
                   style={{

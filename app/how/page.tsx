@@ -148,7 +148,7 @@ export default function HowPage() {
               key={step.name}
               style={{
                 display: "grid",
-                gridTemplateColumns: "32px minmax(0, 1fr) minmax(0, 1.1fr)",
+                gridTemplateColumns: "32px 28px minmax(0, 1fr) minmax(0, 1.1fr)",
                 gap: "0 24px",
                 padding: "0 0 22px",
                 position: "relative",
@@ -171,13 +171,26 @@ export default function HowPage() {
                   zIndex: 1,
                 }}
               />
+              <span
+                className="num"
+                style={{ fontSize: 11, color: "var(--ink-3)", paddingTop: 2 }}
+              >
+                {index + 1}
+              </span>
               <div>
-                <span className="label" style={{ paddingBottom: 3 }}>
-                  {String(index + 1).padStart(2, "0")}
-                  {step.model ? " · reads with a model" : ""}
-                </span>
                 <h3 style={{ fontSize: 15 }}>{step.name}</h3>
-                <p style={{ fontSize: 13, margin: "4px 0 0" }}>{step.does}</p>
+                <p style={{ fontSize: 13, margin: "4px 0 0" }}>
+                  {step.does}
+                  {step.model && (
+                    <span
+                      className="num"
+                      style={{ fontSize: 11, color: "var(--ink-3)" }}
+                    >
+                      {" "}
+                      Reads with a model.
+                    </span>
+                  )}
+                </p>
               </div>
               <div>
                 <p style={{ fontSize: 12.5, margin: 0 }}>{step.how}</p>

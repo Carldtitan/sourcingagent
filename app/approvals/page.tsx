@@ -61,12 +61,14 @@ export default async function ApprovalsPage() {
           <div className="stack" style={{ paddingTop: 18 }}>
             {(open ?? []).map((approval) => (
               <div key={approval.id}>
-                <span className="label" style={{ paddingBottom: 6 }}>
-                  <Link href={`/runs/${approval.run_id}`}>
-                    {(approval.runs as any)?.ingredients?.name ?? "run"}
-                  </Link>
-                </span>
                 <ApprovalCard approval={approval as any} />
+                <p style={{ fontSize: 12.5, margin: "8px 0 0" }}>
+                  Part of the{" "}
+                  <Link href={`/runs/${approval.run_id}`}>
+                    {(approval.runs as any)?.ingredients?.name ?? "sourcing"} run
+                  </Link>
+                  .
+                </p>
               </div>
             ))}
           </div>

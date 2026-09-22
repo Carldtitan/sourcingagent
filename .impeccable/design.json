@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-22T02:10:00Z",
+  "title": "Design System: Aonic Sourcing Engine",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Aonic Paper", "tonalRamp": ["#fcfbf9", "#f3f1ec", "#eae7df"] },
+      "ink": { "role": "neutral", "displayName": "Carbon Ink", "tonalRamp": ["#171614", "#5b564e", "#8b8479"] },
+      "tension": { "role": "primary", "displayName": "Tension Red", "tonalRamp": ["#f7e9e5", "#c4402f", "#a6301f"] },
+      "sand": { "role": "secondary", "displayName": "Aonic Sand", "tonalRamp": ["#f5efe2", "#c9b48a", "#8a6d3b"] },
+      "breach": { "role": "tertiary", "displayName": "Breach", "tonalRamp": ["#f9e6e2", "#a6301f"] },
+      "slack": { "role": "neutral", "displayName": "Slack Ash" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page titles only." },
+      "heading": { "displayName": "Section heading", "purpose": "Section heads, over a full-width ink rule." },
+      "body": { "displayName": "Body", "purpose": "Every sentence." },
+      "label": { "displayName": "Label", "purpose": "The one label style: mono uppercase, tracked 0.14em." },
+      "figure": { "displayName": "Figure", "purpose": "Every number, with tabular and slashed-zero numerals." }
+    },
+    "shadows": [
+      { "name": "lift", "value": "0 1px 2px rgba(23,22,20,0.06), 0 8px 24px -12px rgba(23,22,20,0.22)", "purpose": "Reserved. Not used on screen; the world is flat." }
+    ],
+    "motion": [
+      { "name": "state", "value": "0.16s ease", "purpose": "Colour and fill changes on hover and focus." }
+    ],
+    "breakpoints": [
+      { "name": "rail-collapse", "value": "900px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one committing action per decision, with a red trace drawn through it.",
+      "html": "<button class=\"ds-btn-primary\">Approve and send the RFQ <svg width=\"26\" height=\"10\" viewBox=\"0 0 26 10\"><polyline points=\"0,7 6,7 10,3 16,3 20,6 26,6\" fill=\"none\" stroke=\"#c4402f\" stroke-width=\"1.4\"/></svg></button>",
+      "css": ".ds-btn-primary{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:11px 18px;background:#171614;color:#fcfbf9;border:1px solid #171614;display:inline-flex;align-items:center;gap:10px;cursor:pointer;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,0 100%);transition:background .16s ease}.ds-btn-primary:hover{background:#000}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Any non-committing action.",
+      "html": "<button class=\"ds-btn\">Check mail now</button>",
+      "css": ".ds-btn{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:11px 18px;background:transparent;color:#171614;border:1px solid #171614;cursor:pointer;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,0 100%);transition:background .16s ease}.ds-btn:hover{background:#eae7df}"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Mono input with its label above.",
+      "html": "<label class=\"ds-field\"><span>Quantity, kg</span><input value=\"500\"/></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px}.ds-field span{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#8b8479}.ds-field input{font-family:'JetBrains Mono',monospace;font-size:13px;color:#171614;background:#fcfbf9;border:1px solid #bdb6a8;padding:10px 12px;border-radius:0}.ds-field input:focus{outline:none;border-color:#c4402f}"
+    },
+    {
+      "name": "Rail",
+      "kind": "nav",
+      "description": "Left navigation in mono caps with the current page under tension.",
+      "html": "<nav class=\"ds-rail\"><a>How it works</a><a aria-current=\"page\">Briefs</a><a>Approvals <b>1</b></a></nav>",
+      "css": ".ds-rail{display:flex;flex-direction:column;width:208px;border-right:1px solid #ddd8ce;background:#fcfbf9}.ds-rail a{display:flex;padding:7px 20px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5b564e;border-left:1px solid transparent}.ds-rail a[aria-current]{color:#c4402f;border-left-color:#c4402f;background:#f3f1ec}.ds-rail b{margin-left:auto;color:#c4402f}"
+    },
+    {
+      "name": "Node",
+      "kind": "card",
+      "refersTo": "node",
+      "description": "The only container: one reading or one decision, with a clipped corner.",
+      "html": "<div class=\"ds-node\"><span>Ceiling, $/kg active</span><strong>$17.52</strong></div>",
+      "css": ".ds-node{border:1px solid #c4402f;background:#fcfbf9;padding:14px 16px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}.ds-node span{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8b8479}.ds-node strong{font-family:'JetBrains Mono',monospace;font-size:19px;color:#c4402f;font-weight:500}"
+    },
+    {
+      "name": "Verdict",
+      "kind": "chip",
+      "description": "State as a mark and a word, never colour alone.",
+      "html": "<span class=\"ds-v ds-pass\">pass</span> <span class=\"ds-v ds-fail\">over by 0.303 ppm</span>",
+      "css": ".ds-v{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;letter-spacing:.09em;text-transform:uppercase}.ds-v:before{content:'';width:7px;height:7px;border:1.4px solid currentColor}.ds-pass{color:#171614}.ds-pass:before{background:#171614;border-radius:50%}.ds-fail{color:#a6301f}.ds-fail:before{background:#a6301f;transform:rotate(45deg)}"
+    },
+    {
+      "name": "Load Bar",
+      "kind": "custom",
+      "description": "A measured value against its limit.",
+      "html": "<span class=\"ds-load\"><span style=\"width:86%\"></span></span>",
+      "css": ".ds-load{display:block;position:relative;width:180px;height:3px;background:#eae7df}.ds-load span{position:absolute;inset:0 auto 0 0;background:#8a6d3b}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Breathing Column",
+    "overview": "A buyer's working tool drawn as a tensegrity structure. Every offer is a strut, the ceiling a fixed member nothing may cross, and the negotiation a red cord pulling each strut toward it. Translated onto Aonic's own off-white ground and type.",
+    "keyCharacteristics": [
+      "Flat paper ground, hairline rules, no shadow",
+      "Square geometry with clipped corners",
+      "Inter Tight for words, JetBrains Mono for every number and label",
+      "Red only where something is under live load",
+      "Every automated decision shown with its reason"
+    ],
+    "rules": [
+      { "name": "The One Force Rule", "body": "Red appears only where something is under load right now.", "section": "colors" },
+      { "name": "The Never Colour Alone Rule", "body": "Every verdict pairs its colour with a mark and a word.", "section": "colors" },
+      { "name": "The Assumption Rule", "body": "Anything not read from a supplier or from Aonic sits on a sand notice that says so.", "section": "colors" },
+      { "name": "The Two Voices Rule", "body": "Words in Inter Tight, measurements in JetBrains Mono.", "section": "typography" }
+    ],
+    "dos": [
+      "Do show the reason beside every automated decision.",
+      "Do set every figure in tabular mono with its sign and unit.",
+      "Do keep walked-away and void items visible, struck in ink 3.",
+      "Do label anything simulated or assumed.",
+      "Do write each control as the action it takes."
+    ],
+    "donts": [
+      "Don't use red for anything not under live load.",
+      "Don't round a corner.",
+      "Don't put data in a grid of same-size cards.",
+      "Don't let a verdict rely on colour alone.",
+      "Don't add a label above a heading."
+    ]
+  }
+}
