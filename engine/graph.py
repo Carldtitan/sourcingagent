@@ -141,8 +141,23 @@ def record(state: ReplyState) -> ReplyState:
     return {"message": message}
 
 
+CARRIED = ["currency", "unit", "incoterm", "lead_time_days", "payment_terms", "purity_pct", "valid_days", "quantity_kg"]
+
+
 def normalise_quote(state: ReplyState) -> ReplyState:
-    rs, parsed = state["rs"], state["parsed"]
+    rs = state["rs"]
+    parsed = dict(state["parsed"])
+
+    # Suppliers revise a price and write "all other terms as previously
+    # quoted". Anything the revision does not restate carries over from the
+    # last quotation, so a lead time does not vanish in round two.
+    previous = store.latest_quote(rs["id"])
+    carried = []
+    if previous:
+        for field in CARRIED:
+            if parsed.get(field) in (None, "") and previous.get(field) not in (None, ""):
+                parsed[field] = previous[field]
+                carried.append(field)
 
     currency = parsed.get("currency") or rs["price_currency"]
     unit = parsed.get("unit") or rs["price_unit"]
@@ -180,7 +195,12 @@ def normalise_quote(state: ReplyState) -> ReplyState:
         },
     )
     store.execute("update run_suppliers set stage = 'quoted' where id = %s", (rs["id"],))
-    return {"normalised": result, "quote": quote}
+    if carried:
+        store.execute(
+            "update messages set parsed = parsed || %s::jsonb where id = %s",
+            (store.j({"carried_from_previous_quote": carried}), state["message"]["id"]),
+        )
+    return {"normalised": result, "quote": quote, "parsed": parsed}
 
 
 def decide(state: ReplyState) -> ReplyState:

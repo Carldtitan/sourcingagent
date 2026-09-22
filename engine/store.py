@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import contextlib
+import threading
+import time
 from typing import Any, Iterable
 
 import psycopg2
@@ -14,22 +16,73 @@ from . import config
 psycopg2.extras.register_uuid()
 
 
+_local = threading.local()
+
+# Supabase's pooler drops idle or busy connections now and then. Each thread
+# keeps one connection, and a statement that hits a dropped link reconnects
+# and runs again rather than failing the negotiation it belongs to.
+RETRYABLE = (psycopg2.OperationalError, psycopg2.InterfaceError)
+
+
+def _connect():
+    c = psycopg2.connect(
+        config.need("DATABASE_URL"),
+        sslmode="require",
+        connect_timeout=20,
+        keepalives=1,
+        keepalives_idle=30,
+        keepalives_interval=10,
+        keepalives_count=3,
+    )
+    c.autocommit = True
+    return c
+
+
+def _connection():
+    c = getattr(_local, "conn", None)
+    if c is None or c.closed:
+        c = _connect()
+        _local.conn = c
+    return c
+
+
+def _drop() -> None:
+    c = getattr(_local, "conn", None)
+    if c is not None:
+        try:
+            c.close()
+        except Exception:
+            pass
+    _local.conn = None
+
+
+def _run(fn):
+    last: Exception | None = None
+    for attempt in range(4):
+        try:
+            return fn(_connection())
+        except RETRYABLE as error:
+            last = error
+            _drop()
+            time.sleep(0.6 * (attempt + 1))
+    raise last  # type: ignore[misc]
+
+
 @contextlib.contextmanager
 def conn():
-    c = psycopg2.connect(config.need("DATABASE_URL"), sslmode="require", connect_timeout=20)
-    c.autocommit = True
-    try:
-        yield c
-    finally:
-        c.close()
+    """A connection for callers that need one directly."""
+    yield _connection()
 
 
 def query(sql: str, args: Iterable[Any] = ()) -> list[dict]:
-    with conn() as c, c.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute(sql, tuple(args))
-        if cur.description is None:
-            return []
-        return [dict(r) for r in cur.fetchall()]
+    def go(c):
+        with c.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(sql, tuple(args))
+            if cur.description is None:
+                return []
+            return [dict(r) for r in cur.fetchall()]
+
+    return _run(go)
 
 
 def one(sql: str, args: Iterable[Any] = ()) -> dict | None:
@@ -38,8 +91,11 @@ def one(sql: str, args: Iterable[Any] = ()) -> dict | None:
 
 
 def execute(sql: str, args: Iterable[Any] = ()) -> None:
-    with conn() as c, c.cursor() as cur:
-        cur.execute(sql, tuple(args))
+    def go(c):
+        with c.cursor() as cur:
+            cur.execute(sql, tuple(args))
+
+    _run(go)
 
 
 def j(value: Any) -> str:
@@ -183,9 +239,12 @@ def insert(table: str, values: dict) -> dict:
     sql = (
         f"insert into {table} ({', '.join(cols)}) values ({placeholders}) returning *"
     )
-    with conn() as c, c.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute(sql, values)
-        return dict(cur.fetchone())
+    def go(c):
+        with c.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(sql, values)
+            return dict(cur.fetchone())
+
+    return _run(go)
 
 
 def update(table: str, row_id: Any, values: dict) -> None:
@@ -196,5 +255,8 @@ def update(table: str, row_id: Any, values: dict) -> None:
 
 
 def execute_named(sql: str, args: dict) -> None:
-    with conn() as c, c.cursor() as cur:
-        cur.execute(sql, args)
+    def go(c):
+        with c.cursor() as cur:
+            cur.execute(sql, args)
+
+    _run(go)

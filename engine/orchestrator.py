@@ -236,17 +236,28 @@ def _maybe_open_award(run_id: str) -> bool:
     if already:
         return False
 
-    winner = table[0]
+    in_play = [row for row in table if row["stage"] != "walked_away"]
+    if not in_play:
+        return False
+    winner = in_play[0]
+    ceiling = float(store.run(run_id)["guardrails"]["ceiling_usd_per_kg_active"])
+    over = winner["delivered"] - ceiling
+    headline = (
+        f"Recommend {winner['supplier']} at ${winner['delivered']:,.2f} per kg delivered"
+        if over <= 0
+        else (
+            f"Best available is {winner['supplier']} at ${winner['delivered']:,.2f} per kg, "
+            f"${over:,.2f} above the ${ceiling:,.2f} ceiling"
+        )
+    )
     store.insert(
         "approvals",
         {
             "run_id": run_id,
             "kind": "gate_award",
             "subject_id": winner["run_supplier_id"],
-            "headline": (
-                f"Recommend {winner['supplier']} at ${winner['delivered']:,.2f} per kg delivered"
-            ),
-            "context": store.j({"table": table}),
+            "headline": headline,
+            "context": store.j({"table": table, "ceiling": ceiling, "over_ceiling": over > 0}),
             "options": store.j(
                 [
                     {"id": "approve", "label": "Approve and send the close", "consequence": "Sends the closing email and ends the run.", "tone": "primary"},

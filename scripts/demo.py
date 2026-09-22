@@ -28,7 +28,7 @@ AUTO = {
     "gate_award": "approve",
     "coa_failed": "retest",
     "price_ceiling": "hold",
-    "rounds_exhausted": "walk",
+    "rounds_exhausted": "hold",
     "supplier_question": "walk",
 }
 
