@@ -44,7 +44,8 @@ def assess(*, supplier: dict, spec: dict, run: dict) -> tuple[bool, str]:
         reasons.append(f"{supplier['country']} is not an accepted origin for this material")
 
     if reasons:
-        return False, "; ".join(reasons).capitalize()
+        text = "; ".join(reasons)
+        return False, text[:1].upper() + text[1:] + "."
 
     extra = [c for c in supplier["certs"] if c not in spec["required_certs"]]
     kept = (

@@ -64,7 +64,7 @@ export function rank({
   }
 
   const candidates = runSuppliers.filter(
-    (row) => row.qualified && latestQuote.has(row.id) && row.stage !== "walked_away"
+    (row) => row.qualified && latestQuote.has(row.id)
   );
   if (candidates.length === 0) return [];
 
@@ -120,6 +120,14 @@ export function rank({
     } satisfies RankedOffer;
   });
 
-  offers.sort((a, b) => b.score.total - a.score.total || a.delivered - b.delivered);
+  // Offers still in play rank above ones we walked away from, so the leader
+  // is always something the buyer can actually award.
+  const settled = (stage: string) => (stage === "walked_away" ? 1 : 0);
+  offers.sort(
+    (a, b) =>
+      settled(a.stage) - settled(b.stage) ||
+      b.score.total - a.score.total ||
+      a.delivered - b.delivered
+  );
   return offers;
 }

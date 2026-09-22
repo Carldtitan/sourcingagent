@@ -39,6 +39,7 @@ def find_reference(text: str) -> str | None:
 
 @dataclass
 class Inbound:
+    uid: bytes
     message_id: str
     from_addr: str
     to_addr: str
@@ -122,7 +123,7 @@ def _attachments(msg: email.message.Message) -> list[tuple[str, bytes]]:
     return out
 
 
-def fetch_unread(limit: int = 30, mark_seen: bool = True) -> list[Inbound]:
+def fetch_unread(limit: int = 30, mark_seen: bool = False) -> list[Inbound]:
     """Pull unseen messages out of the mailbox.
 
     Gmail delivers both sides of every conversation to the same account, so
@@ -153,6 +154,7 @@ def fetch_unread(limit: int = 30, mark_seen: bool = True) -> list[Inbound]:
 
             out.append(
                 Inbound(
+                    uid=uid,
                     message_id=msg.get("Message-ID", "").strip(),
                     from_addr=from_addr,
                     to_addr=to_addr,
@@ -169,6 +171,26 @@ def fetch_unread(limit: int = 30, mark_seen: bool = True) -> list[Inbound]:
                 )
             )
         return out
+    finally:
+        try:
+            box.logout()
+        except Exception:
+            pass
+
+
+def mark_seen(uids: list[bytes]) -> None:
+    """Flag messages as handled, so the next tick does not read them again.
+
+    A message is only marked once the engine has finished with it. Anything a
+    tick ran out of time for stays unread and is picked up by the next one.
+    """
+    if not uids:
+        return
+    box = imaplib.IMAP4_SSL(config.IMAP_HOST, config.IMAP_PORT)
+    try:
+        box.login(config.need("GMAIL_ADDRESS"), config.need("GMAIL_APP_PASSWORD"))
+        box.select("INBOX")
+        box.store(b",".join(uids), "+FLAGS", r"\Seen")
     finally:
         try:
             box.logout()

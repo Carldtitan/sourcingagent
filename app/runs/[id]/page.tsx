@@ -207,7 +207,13 @@ export default async function RunPage({
               {offers.map((offer, index) => (
                 <tr
                   key={offer.runSupplierId}
-                  className={index === 0 ? "is-lead" : undefined}
+                  className={
+                    offer.stage === "walked_away"
+                      ? "is-void"
+                      : index === 0
+                        ? "is-lead"
+                        : undefined
+                  }
                 >
                   <td className="num" style={{ color: "var(--ink-3)" }}>
                     {index + 1}
@@ -218,6 +224,8 @@ export default async function RunPage({
                     </Link>
                     <span className="sub">
                       {offer.country} · {offer.kind}
+                      {offer.stage === "walked_away" ? " · we walked away" : ""}
+                      {offer.stage === "agreed" ? " · agreed" : ""}
                     </span>
                   </td>
                   <td className="num" style={{ fontSize: 12 }}>

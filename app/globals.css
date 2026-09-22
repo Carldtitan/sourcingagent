@@ -458,6 +458,10 @@ table.ledger th {
 table.ledger th.r,
 table.ledger td.r {
   text-align: right;
+  padding-right: 18px;
+}
+table.ledger th:last-child,
+table.ledger td:last-child {
   padding-right: 0;
 }
 table.ledger td {
@@ -708,9 +712,31 @@ table.ledger tr.is-lead:hover td {
 
 /* -------------------------------------------------------- adaptation --- */
 
+.stage {
+  overflow-x: clip;
+}
+
 @media (max-width: 900px) {
   :root {
     --gut: 16px;
+  }
+  table.ledger {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .headblock {
+    gap: 18px;
+  }
+  .readout {
+    gap: 18px 24px;
+  }
+  .section-head {
+    flex-wrap: wrap;
+  }
+  .section-head .rule-note {
+    margin-left: 0;
+    flex-basis: 100%;
   }
   .chassis {
     grid-template-columns: minmax(0, 1fr);

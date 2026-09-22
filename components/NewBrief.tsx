@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { engine } from "@/lib/engine";
 import { Trace } from "./Trace";
 
 type Choice = {
@@ -27,18 +28,12 @@ export function NewBrief({ ingredients }: { ingredients: Choice[] }) {
     setBusy(true);
     setError(null);
     try {
-      const response = await fetch("/api/engine", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "start",
-          ingredient_id: ingredientId,
-          quantity_kg: Number(quantity),
-          needed_by_days: Number(neededBy),
-        }),
+      const body = await engine<{ run_id: string }>({
+        action: "start",
+        ingredient_id: ingredientId,
+        quantity_kg: Number(quantity),
+        needed_by_days: Number(neededBy),
       });
-      const body = await response.json();
-      if (!response.ok || body.error) throw new Error(body.error ?? "failed");
       router.push(`/runs/${body.run_id}`);
     } catch (problem) {
       setError(

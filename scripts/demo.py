@@ -64,7 +64,7 @@ def main() -> None:
     show(run_id)
     cursor = print_events(run_id, 0)
 
-    for step in range(80):
+    for step in range(220):
         for approval in store.open_approvals(run_id):
             choice = AUTO[approval["kind"]]
             if not auto:
@@ -82,7 +82,7 @@ def main() -> None:
         run = store.run(run_id)
         if run["status"] in ("closed", "cancelled"):
             break
-        time.sleep(5)
+        time.sleep(4)
 
     print()
     table = orchestrator.comparison(run_id)

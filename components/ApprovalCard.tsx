@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { engine } from "@/lib/engine";
 import { Trace } from "./Trace";
 
 type Option = {
@@ -44,17 +45,11 @@ export function ApprovalCard({ approval }: { approval: Approval }) {
     setBusy(decision);
     setError(null);
     try {
-      const response = await fetch("/api/engine", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "decide",
-          approval_id: approval.id,
-          decision,
-        }),
+      await engine({
+        action: "decide",
+        approval_id: approval.id,
+        decision,
       });
-      const body = await response.json();
-      if (!response.ok || body.error) throw new Error(body.error ?? "failed");
       router.refresh();
     } catch (problem) {
       setError(problem instanceof Error ? problem.message : "Something failed.");

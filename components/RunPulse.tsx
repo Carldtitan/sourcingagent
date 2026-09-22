@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { engine } from "@/lib/engine";
 
 /**
  * Keeps a live run moving while someone is watching it.
@@ -24,12 +25,10 @@ export function RunPulse({ runId }: { runId: string }) {
     running.current = true;
     setState("working");
     try {
-      const response = await fetch("/api/engine", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "tick", run_id: runId }),
+      const body = await engine<Record<string, number>>({
+        action: "tick",
+        run_id: runId,
       });
-      const body = await response.json();
       const moved =
         (body.replies_triggered ?? 0) +
         (body.inbound_processed ?? 0) +

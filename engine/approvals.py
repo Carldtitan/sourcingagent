@@ -12,7 +12,7 @@ can be read back afterwards as a sequence of who decided what.
 
 from __future__ import annotations
 
-from . import copy as copytext, config, mail, negotiator, orchestrator, store
+from . import copy as copytext, config, mail, negotiator, store
 
 
 def resolve(*, approval_id: str, decision: str, note: str | None = None, decided_by: str = "buyer") -> dict:
