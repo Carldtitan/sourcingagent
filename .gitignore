@@ -8,3 +8,7 @@ __pycache__/
 *.pyc
 .venv/
 Do not push to github/
+
+.vercel
+.env*
+!.env.example

@@ -1,0 +1,6 @@
+.env
+.env.*
+Do not push to github
+.impeccable
+__pycache__
+*.pyc
