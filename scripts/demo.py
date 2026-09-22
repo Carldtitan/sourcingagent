@@ -20,6 +20,10 @@ import time
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
+# The agents write plain sentences that sometimes carry symbols such as an
+# approximately-equals sign. A Windows console cannot print those by default.
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 from engine import approvals, orchestrator, store
 
 
@@ -54,13 +58,15 @@ def main() -> None:
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     auto = "--auto" in sys.argv
 
-    ingredient_id = args[0] if args else "zinc-citrate"
-    quantity = float(args[1]) if len(args) > 1 else 500
-    needed_by = int(args[2]) if len(args) > 2 else 84
-
-    run_id = orchestrator.start_run(
-        ingredient_id=ingredient_id, quantity_kg=quantity, needed_by_days=needed_by
-    )
+    if "--resume" in sys.argv:
+        run_id = sys.argv[sys.argv.index("--resume") + 1]
+    else:
+        ingredient_id = args[0] if args else "zinc-citrate"
+        quantity = float(args[1]) if len(args) > 1 else 500
+        needed_by = int(args[2]) if len(args) > 2 else 84
+        run_id = orchestrator.start_run(
+            ingredient_id=ingredient_id, quantity_kg=quantity, needed_by_days=needed_by
+        )
     show(run_id)
     cursor = print_events(run_id, 0)
 
@@ -74,10 +80,17 @@ def main() -> None:
                 print("\n  Re-run with --auto to let the script answer these.\n")
                 return
             print(f"  [human      ] {choice} on: {approval['headline']}")
-            approvals.resolve(approval_id=str(approval["id"]), decision=choice, decided_by="demo")
+            try:
+                approvals.resolve(approval_id=str(approval["id"]), decision=choice, decided_by="demo")
+            except Exception as error:
+                print(f"  [demo       ] decision failed, retrying next step: {type(error).__name__}: {error}")
 
-        orchestrator.tick(run_id)
+        try:
+            orchestrator.tick(run_id)
+        except Exception as error:
+            print(f"  [demo       ] step failed, retrying: {type(error).__name__}: {error}")
         cursor = print_events(run_id, cursor)
+        sys.stdout.flush()
 
         run = store.run(run_id)
         if run["status"] in ("closed", "cancelled"):

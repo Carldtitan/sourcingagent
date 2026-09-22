@@ -289,7 +289,11 @@ def comparison(run_id: str) -> list[dict]:
         from run_suppliers rs
         join suppliers s on s.id = rs.supplier_id
         join quotes q on q.run_supplier_id = rs.id
-        left join coas c on c.run_supplier_id = rs.id
+        left join lateral (
+            select verdict, batch_no, findings from coas
+            where coas.run_supplier_id = rs.id
+            order by created_at desc limit 1
+        ) c on true
         where rs.run_id = %s
         order by rs.id, q.round desc
         """,

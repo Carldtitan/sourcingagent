@@ -17,6 +17,7 @@ import re
 import smtplib
 import ssl
 import string
+import time
 from dataclasses import dataclass, field
 
 from . import config
@@ -78,14 +79,24 @@ def send(
         msg.add_attachment(data, maintype="application", subtype="pdf", filename=name)
 
     context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(config.SMTP_HOST, config.SMTP_PORT, context=context, timeout=30) as server:
-        server.login(config.need("GMAIL_ADDRESS"), config.need("GMAIL_APP_PASSWORD"))
-        # The envelope sender must be the account itself. The From header
-        # carries the plus address, which is what a reader and our own parser
-        # both see.
-        server.send_message(msg, from_addr=config.GMAIL_ADDRESS, to_addrs=[to])
-
-    return message_id
+    last: Exception | None = None
+    for attempt in range(4):
+        try:
+            with smtplib.SMTP_SSL(
+                config.SMTP_HOST, config.SMTP_PORT, context=context, timeout=30
+            ) as server:
+                server.login(config.need("GMAIL_ADDRESS"), config.need("GMAIL_APP_PASSWORD"))
+                # The envelope sender must be the account itself. The From
+                # header carries the plus address, which is what a reader and
+                # our own parser both see.
+                server.send_message(msg, from_addr=config.GMAIL_ADDRESS, to_addrs=[to])
+            return message_id
+        except (smtplib.SMTPException, OSError) as error:
+            # Gmail throttles bursts and drops the odd connection. Back off
+            # and try again before failing the negotiation.
+            last = error
+            time.sleep(2.0 * (attempt + 1))
+    raise last  # type: ignore[misc]
 
 
 def _decode(value: str | None) -> str:
