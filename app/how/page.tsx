@@ -99,7 +99,7 @@ export default function HowPage() {
           <p>
             One brief in, three to five validated and comparable offers out.
             Twelve steps, two gates where nothing moves without a person, and
-            three places the engine stops itself and asks.
+            four triggers where the engine stops itself and asks.
           </p>
         </div>
         <div className="readout">
