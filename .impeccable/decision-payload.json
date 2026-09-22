@@ -1,0 +1,137 @@
+{
+  "title": "Choose the visual world",
+  "question": "The roll assigned The Carbon Set. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "The Carbon Set",
+      "kicker": "THE ROLL",
+      "lineage": "multipart bills of lading, customs declarations and carbon-copy order sets",
+      "thesis": "Sourcing is a document changing hands, so the interface is the set of copies, each party's sheet tinted and stamped, and it refuses the dashboard-of-cards arrangement this category always ships.",
+      "palette": ["#fcfbf9", "#171614", "#c9b48a", "#8a6d3b", "#b4443a"],
+      "materials": ["carbon-copy tint bands", "rubber-stamp approval marks", "perforated rules", "typewriter tabular figures"],
+      "viewport": "One ruled sheet fills the width, the brief typed into its head block, the twelve suppliers as numbered lines below, each carrying its clearance stamp or its strike-through with the reason typed beside it. The approve action sits in the foot block where a signature goes.",
+      "risk": "Reads as pastiche when the stamps become decoration instead of live state.",
+      "raised": [
+        {"from": "challenger-sixpack", "raise": "Every measured value shows its distance from the limit, so a supplier drifting toward a ceiling is visible before it fails."},
+        {"from": "challenger-ikeda", "raise": "Tabular data sets at real density with no padding, so a full negotiation reads on one screen."}
+      ],
+      "wireframe": {"cols": 12, "rows": 10, "regions": [
+        {"label": "form head: the brief", "x": 0, "y": 0, "w": 12, "h": 2, "accent": true},
+        {"label": "supplier lines, numbered", "x": 0, "y": 2, "w": 8, "h": 6},
+        {"label": "reason typed in margin", "x": 8, "y": 2, "w": 4, "h": 6},
+        {"label": "foot block: signature and approve", "x": 0, "y": 8, "w": 12, "h": 2, "accent": true}
+      ]}
+    },
+    {
+      "id": "model-pick",
+      "label": "The Monograph",
+      "kicker": "IMPECCABLE'S PICK",
+      "lineage": "Certificates of Analysis and pharmacopoeia monographs",
+      "thesis": "The lab report is the document a buyer already trusts, so the whole interface is set as one, with a specification column and a result column that never leave each other's side.",
+      "palette": ["#fcfbf9", "#171614", "#c9b48a", "#2f6b4f", "#b4443a"],
+      "materials": ["ruled limit tables", "monospace assay figures", "hairline column rules", "batch header blocks"],
+      "viewport": "A two-column ruled table runs the page, specification on the left and measured result on the right, every failing row broken by a heavy rule with the deviation typed in the margin.",
+      "risk": "It is where most runs in this category land, and it can read as a spreadsheet with better typography.",
+      "wireframe": {"cols": 12, "rows": 10, "regions": [
+        {"label": "batch header", "x": 0, "y": 0, "w": 12, "h": 2},
+        {"label": "specification column", "x": 0, "y": 2, "w": 5, "h": 8, "accent": true},
+        {"label": "result column", "x": 5, "y": 2, "w": 5, "h": 8},
+        {"label": "deviation margin", "x": 10, "y": 2, "w": 2, "h": 8}
+      ]}
+    },
+    {
+      "id": "challenger-orienteering",
+      "label": "The Course Overlay",
+      "verdict": "competitive",
+      "lineage": "orienteering maps, ISOM ink standards and control descriptions",
+      "thesis": "The specification is fixed terrain in a strict ink language, and each negotiation is a numbered course drawn over it that never edits the ground beneath.",
+      "palette": ["#fcfbf9", "#171614", "#6b4fa8", "#c9b48a", "#2f6b4f"],
+      "materials": ["ISO ink fills", "contour texture", "control circles", "ranked legend table"],
+      "viewport": "A fixed field of specification bands fills the page, each supplier's negotiation drawn over it as a numbered purple leg, with a legend table ranking every symbol.",
+      "case": "Holds product clarity outright: it separates what cannot change from what is being negotiated, which is the exact structure of this task. Loses audience identification, because a sourcing buyer does not read maps.",
+      "risk": "The ink language needs teaching before it reads, and a buyer working in short bursts has no time for a legend.",
+      "wireframe": {"cols": 12, "rows": 10, "regions": [
+        {"label": "specification terrain", "x": 0, "y": 0, "w": 9, "h": 10, "accent": true},
+        {"label": "legend table", "x": 9, "y": 0, "w": 3, "h": 10}
+      ]}
+    },
+    {
+      "id": "challenger-sixpack",
+      "label": "Night Instrument Panel",
+      "verdict": "declined",
+      "lineage": "a small aircraft's night instrument six-pack",
+      "thesis": "Six luminous gauges hold a buyer's trust while a run proceeds unseen.",
+      "palette": ["#0d0f0e", "#f2f0ea", "#7ee08a", "#e0a23a"],
+      "materials": ["matte panel ground", "luminous dial markings", "damped needles"],
+      "viewport": "Two ranked rows of three gauges, each owning one truth about the run.",
+      "case": "Fuses poorly: twelve suppliers and four escalation kinds do not reduce to six dials, and the dark panel breaks Aonic's pinned off-white ground.",
+      "kept": "Deviation shows before the alarm does.",
+      "risk": "Gauges flatten the detail a buyer must read before approving."
+    },
+    {
+      "id": "challenger-ikeda",
+      "label": "Datamatics Field",
+      "verdict": "declined",
+      "lineage": "Ryoji Ikeda, dense barcode columns in pure black and white",
+      "thesis": "Every offer is a column in one strobing data field.",
+      "palette": ["#000000", "#ffffff"],
+      "materials": ["hairline bar fields", "monospace numerics", "full-frame inversion"],
+      "viewport": "A wall of hairline columns with tabular numbers packed into the margin.",
+      "case": "Fuses poorly on both axes: pure black and white refuses Aonic's pinned palette, and a buyer approving a purchase needs named reasons.",
+      "kept": "Density courage. Data sets at its real size with nothing padded.",
+      "risk": "Beautiful and unreadable at the moment a decision is due."
+    },
+    {
+      "id": "challenger-seedbed",
+      "label": "Seedbed Lobes",
+      "verdict": "declined",
+      "lineage": "saturated green ground with floating white capsule bars",
+      "thesis": "The interface floats as detached lozenges over one owning colour.",
+      "palette": ["#82cc5c", "#2f3130", "#ffffff", "#f2efe3"],
+      "materials": ["capsule bars", "rounded slabs", "circular icon wells"],
+      "viewport": "A green field with a floating white nav capsule and an oversized flush-left headline.",
+      "case": "Fuses poorly on both axes: it is consumer marketing dressing on an operational tool, and it carries no vocabulary for pass, fail or pending.",
+      "kept": "Colour committed at page scale instead of scattered as accents.",
+      "risk": "Nothing in it can express a failed heavy metal reading."
+    },
+    {
+      "id": "challenger-miura",
+      "label": "Deployable Sheet",
+      "verdict": "declined",
+      "lineage": "a Miura-fold sheet opening from a hand-sized packet",
+      "thesis": "One brief unfolds into the full field of offers.",
+      "palette": ["#ffffff", "#171614", "#c9a24a", "#9fb4c0"],
+      "materials": ["scored crease lines", "parallelogram grid", "gold packet face"],
+      "viewport": "A compact packet that deploys into a tessellated field of linked cells.",
+      "case": "Fuses poorly on both axes: the fold is a transition, not a working surface, and a buyer returning mid-run needs the field already open.",
+      "kept": "One control propagating a change across every linked cell.",
+      "risk": "The metaphor costs a step on every visit and pays once."
+    },
+    {
+      "id": "challenger-cloudquarry",
+      "label": "Cloud Quarry",
+      "verdict": "declined",
+      "lineage": "workers cutting blocks of weather from a cumulus cliff",
+      "thesis": "Offers are cut, lifted and assembled as temporary blocks.",
+      "palette": ["#f4f6f8", "#5b7fa6", "#3a4149", "#c8ced4"],
+      "materials": ["cumulus block mass", "stencil caps", "sky-blue cut voids"],
+      "viewport": "Stacked cloud blocks with deep blue gaps and measurements set in mono.",
+      "case": "Fuses poorly on both axes: nothing in a surreal quarry maps to a laboratory limit or a price ceiling, and dissolution is the wrong promise for a purchase record.",
+      "kept": "Sections read as cut volumes with real weight between them.",
+      "risk": "It would have to be explained before it could be used."
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "The procurement dashboard every vendor ships, executed impeccably.",
+    "palette": ["#ffffff", "#111827", "#2563eb", "#16a34a"],
+    "materials": ["card grid", "status pills", "left nav rail"],
+    "viewport": "A left nav rail, four summary tiles across the top and a sortable table below.",
+    "risk": "A reviewer has seen it a hundred times and will remember nothing about it."
+  },
+  "steer": true
+}
